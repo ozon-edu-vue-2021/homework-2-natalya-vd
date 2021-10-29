@@ -18,8 +18,8 @@ export default {
 
   props: {
     isOpen: {
-      type: Boolean,
-      default: false
+      type: Array,
+      default: () => []
     }
   },
 
@@ -27,7 +27,7 @@ export default {
     iconDropDown() {
       return [
         "icon-drop-down", {
-          "icon-drop-down_open": this.isOpen
+          "icon-drop-down_open": this.isOpen[0] && this.isOpen[1]
         }
       ]
     }

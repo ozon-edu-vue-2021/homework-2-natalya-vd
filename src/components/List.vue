@@ -7,7 +7,6 @@
         </h2>
         <directory
             :items="items"
-            :prop-path="this.items.name"
             @emitPath="chengedPath($event)"
         />
     </div>
@@ -43,8 +42,10 @@ export default {
 
     methods: {
         chengedPath(event) {
-            if(!this.path.includes(event)) {
-                this.path = event
+            if(!this.path.includes(event.name) && event.isShow) {
+                this.path = event.name
+            } else {
+                this.path = this.items.name;
             }
         }
     }

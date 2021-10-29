@@ -2,29 +2,31 @@
 <template>
     <div>
         <div 
+            class="directory-wrapper" 
             v-if="items.type === 'directory'"
         >
-            <div class="directory-wrapper">
-                <div class="directory-inner">
-                    <img class="directory-img" src="../assets/images/directory.png" alt="Directory">
-                    <p>{{ items.name }}</p>
-                    
-                </div>
-                <icon-drop-down 
-                    @click="open"
-                    v-show="items.contents.length"
-                    :is-open="isOpen"
-                />
+            <div class="directory-inner">
+                <img class="directory-img" src="../assets/images/directory.png" alt="Directory">
+                <p>{{ items.name }}</p>
             </div>
+            <icon-drop-down 
+                @click="open"
+                v-show="items.contents.length"
+                :is-open="[isOpen, isShow]"
+            />
+        </div>
 
-            <div v-if="isOpen" class="directory-open">
-                <directory
-                    v-for="(tree, i) in items.contents"
-                    :key="`${tree.name}-${i}`"
-                    :items="tree"
-                    :prop-path="propPath"
-                />
-            </div>
+        <div 
+            v-if="isOpen" 
+            v-show="isShow"  
+            class="directory-open"
+        >
+            <directory
+                v-for="(tree, i) in items.contents"
+                :key="`${tree.name}-${i}`"
+                :items="tree"
+                @emitPath="chengedPath($event)"
+            />
         </div>
 
         <file 
@@ -56,18 +58,14 @@ export default {
 
     data: () => ({
         isOpen: false,
-        selectedMap: {},
+        isShow: true,
+        selectedMap: {}
     }),
 
     props: {
         items: {
             type: Object,
             default: () => ({})
-        },
-
-        propPath: {
-            type: String,
-            default: 'path-default'
         }
     },
 
@@ -83,11 +81,21 @@ export default {
             ? Vue.delete(this.selectedMap, items.name)
             : Vue.set(this.selectedMap, items.name, items);
 
-            this.$parent.$emit('emitPath', `${this.propPath}/${items.name}`)
+            this.$emit('emitPath', {name: items.name, isShow: this.isShow})
         },
 
         open() {
-            return this.isOpen = !this.isOpen;
+            if(this.isOpen) {
+                this.isShow = !this.isShow;
+            } else {
+                this.isOpen = true;
+            }
+
+            this.$emit('emitPath', {name: this.items.name, isShow: this.isShow});
+        },
+
+        chengedPath(event) {
+            this.$emit('emitPath', {name: `${this.items.name}/${event.name}`, isShow: event.isShow})
         }
     },
 }
