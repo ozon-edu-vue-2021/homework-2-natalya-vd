@@ -9,11 +9,15 @@
                 <img class="directory-img" src="../assets/images/directory.png" alt="Directory">
                 <p>{{ items.name }}</p>
             </div>
-            <icon-drop-down 
+            <button 
                 @click="open"
                 v-show="items.contents.length"
+                class="button-open"
+            >
+                <icon-drop-down 
                 :is-open="[isOpen, isShow]"
             />
+            </button>
         </div>
 
         <div 
@@ -32,15 +36,18 @@
         <file 
             v-if="items.type === 'file'"
             @click="selectHandler(items)"
+            @keyup.enter="selectHandler(items)"
             :class="[{'active': selectedMap[items.name]}]"
             :name="`${items.name}`"
+            tabindex="0"
         />
         <Link 
             v-if="items.type === 'link'"
             @click="selectHandler(items)"
+            @keyup.enter="selectHandler(items)"
             :class="[{'active': selectedMap[items.name]}]"
             :name="`${items.name}`"
-            :target="`${items.target}`"
+            tabindex="0"
         />
     </div>
 </template>
@@ -120,6 +127,10 @@ export default {
     width: 40px;
     height: auto;
     margin: 0 8px 0 0;
+}
+
+.button-open {
+    cursor: pointer;
 }
 
 .active {

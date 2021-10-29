@@ -1,8 +1,12 @@
 <template>
     <div
         v-on="$listeners"
+        class="link-wrapper"
     >
-        <a class="link" :href="target"><img class="link-img" src="../assets/images/link.png" alt="Link">{{ name }}</a>
+        <img class="link-img" src="../assets/images/link.png" alt="Link">
+        <p>
+            {{ name }}
+        </p>
     </div>
 </template>
 
@@ -15,20 +19,18 @@ export default {
         name: {
             tepy: String,
             default: '',
-        },
-
-        target: {
-            type: String,
-            default: 'link'
         }
     }
 }
 </script>
 
 <style scoped>
-.link {
+.link-wrapper {
     display: flex;
     align-items: center;
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
 }
 .link-img {
     width: 40px;
